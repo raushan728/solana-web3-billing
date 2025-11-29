@@ -12,7 +12,7 @@ solana_billing = "Fq8hS98ADTeuB249ATJjzdmH3g8rDYDU2uA3yzBZNhsw"
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "localnet"
+cluster = "devnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]
