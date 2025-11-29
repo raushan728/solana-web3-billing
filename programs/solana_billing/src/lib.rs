@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
-use anchor_spl::token::{Token, TokenAccount};
+use anchor_spl::token::{self, Transfer, Token, TokenAccount};
 
-declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS"); 
+declare_id!("Fq8hS98ADTeuB249ATJjzdmH3g8rDYDU2uA3yzBZNhsw"); 
 #[program]
 pub mod solana_billing {
     use super::*;
@@ -32,6 +32,59 @@ pub mod solana_billing {
         merchant.plan_count += 1;
 
         msg!("Plan Created! ID: {}, Price: {}", plan.plan_id, amount);
+        Ok(())
+    }
+
+    pub fn subscribe(ctx: Context<Subscribe>) -> Result<()> {
+        let subscription = &mut ctx.accounts.subscription;
+        let plan = &ctx.accounts.plan;
+        let clock = Clock::get()?;
+        
+        subscription.customer = ctx.accounts.customer.key();
+        subscription.merchant = ctx.accounts.merchant.key();
+        subscription.plan = plan.key();
+        
+        subscription.start_time = clock.unix_timestamp;
+        subscription.next_billing_time = clock.unix_timestamp + plan.duration;
+        
+        subscription.is_active = true;
+        subscription.bump = ctx.bumps.subscription;
+
+        msg!("Subscribed! Next billing: {}", subscription.next_billing_time);
+        Ok(())
+    }
+
+      pub fn make_payment(ctx: Context<MakePayment>, invoice_id: i64) -> Result<()> {
+        let subscription = &mut ctx.accounts.subscription;
+        let plan = &ctx.accounts.plan;
+        let invoice = &mut ctx.accounts.invoice;
+        let clock = Clock::get()?;
+
+        if clock.unix_timestamp < subscription.next_billing_time {
+             return err!(ErrorCode::PaymentNotDue);
+        }
+
+        let transfer_instruction = Transfer {
+            from: ctx.accounts.customer_token_account.to_account_info(),
+            to: ctx.accounts.merchant_token_account.to_account_info(),
+            authority: ctx.accounts.customer.to_account_info(),
+        };
+        
+        let cpi_ctx = CpiContext::new(
+            ctx.accounts.token_program.to_account_info(),
+            transfer_instruction,
+        );
+
+        token::transfer(cpi_ctx, plan.amount)?; 
+
+        subscription.next_billing_time += plan.duration;
+
+        invoice.subscription = subscription.key();
+        invoice.amount = plan.amount;
+        invoice.timestamp = clock.unix_timestamp;
+        invoice.bump = ctx.bumps.invoice;
+        
+        msg!("Payment Success! Invoice Created.");
         Ok(())
     }
 }
@@ -84,6 +137,79 @@ pub struct CreatePlan<'info> {
 
     pub system_program: Program<'info, System>,
 }
+
+#[derive(Accounts)]
+pub struct Subscribe<'info> {
+    #[account(
+        init,
+             seeds = [
+            b"subscription", 
+            customer.key().as_ref(), 
+            plan.key().as_ref()
+        ], 
+        bump,
+        payer = customer, 
+        space = 8 + 32 + 32 + 32 + 8 + 8 + 1 + 1
+    )]
+    pub subscription: Account<'info, Subscription>,
+
+    #[account(
+        mut, 
+        has_one = merchant 
+    )]
+    pub plan: Account<'info, Plan>,
+
+    /// CHECK: To match the merchant's address
+    pub merchant: UncheckedAccount<'info>,
+
+    #[account(mut)]
+    pub customer: Signer<'info>,
+
+    pub system_program: Program<'info, System>,
+}
+#[derive(Accounts)]
+#[instruction(invoice_id: i64)]
+pub struct MakePayment<'info> {
+    #[account(
+        mut,
+        has_one = plan,
+        has_one = merchant,
+        has_one = customer 
+    )]
+    pub subscription: Account<'info, Subscription>,
+
+    #[account(has_one = merchant)]
+    pub plan: Account<'info, Plan>,
+
+    #[account(
+        init,
+        // Ab hum argument wala 'invoice_id' use kar rahe hain seed ke liye
+        seeds = [
+            b"invoice", 
+            subscription.key().as_ref(), 
+            &invoice_id.to_le_bytes() 
+        ], 
+        bump, 
+        payer = customer, 
+        space = 8 + 32 + 8 + 8 + 50 + 1 
+    )]
+    pub invoice: Account<'info, Invoice>,
+
+    #[account(mut)]
+    pub merchant: Account<'info, Merchant>,
+
+    #[account(mut)]
+    pub customer: Signer<'info>,
+
+    #[account(mut)] 
+    pub customer_token_account: Account<'info, TokenAccount>,
+
+    #[account(mut)]
+    pub merchant_token_account: Account<'info, TokenAccount>,
+
+    pub token_program: Program<'info, Token>,
+    pub system_program: Program<'info, System>,
+}
 #[account]
 pub struct Merchant {
     pub authority: Pubkey,
@@ -120,4 +246,9 @@ pub struct Invoice {
     pub timestamp: i64,
     pub tx_sig: String,
     pub bump: u8,
+}
+#[error_code]
+pub enum ErrorCode {
+    #[msg("Payment is not due yet.")]
+    PaymentNotDue,
 }
