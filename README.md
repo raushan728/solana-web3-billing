@@ -381,6 +381,13 @@ We welcome contributions! Please follow these steps:
 4.  Push to the branch.
 5.  Open a Pull Request.
 
+## Connect with Me
+
+- [Email](mailto:raushankumarwork74@gmail.com)
+- [Twitter](https://x.com/Raushan_090)
+- [LinkedIn](https://www.linkedin.com/in/raushan-kumar-807916390/)
+- [Telegram](https://t.me/raushan_singh_29)
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
