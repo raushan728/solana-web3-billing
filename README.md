@@ -47,7 +47,7 @@
 
 # Solana Web3 Billing Protocol
 
-![Solana Web3 Billing Protocol](demo/1-landing-page.png)
+![Solana Web3 Billing Protocol](./demo/1-landing-page.png)
 
 ## Introduction
 
@@ -325,7 +325,7 @@ Open `http://localhost:3000` in your browser.
 3.  Fill in the Plan details (Name, Price in USDC, Duration).
 4.  Click "Create Plan".
 
-![Merchant Workflow](demo/2-merchant-setup.png)
+![Merchant Workflow](./demo/2-merchant-setup.png)
 *Above: The interface where merchants define the terms of the subscription.*
 
 ### Phase 2: Customer View
@@ -340,7 +340,7 @@ Once a plan is created on-chain, it is public. Any user who visits the dApp can 
 2.  Ensure the Customer wallet has SOL (for gas) and USDC (for payment).
     *   *Dev Tip*: You can mint fake USDC to your wallet using spl-token CLI tools if testing on Devnet, or use the mock-usdc feature if enabled in the contract.
 
-![Customer Subscription](demo/4-subscribe-plan.png)
+![Customer Subscription](./demo/4-subscribe-plan.png)
 *Above: The customer sees the plan details fetched directly from the blockchain.*
 
 ### Phase 3: Payment & Subscription
@@ -358,7 +358,7 @@ Once a plan is created on-chain, it is public. Any user who visits the dApp can 
 2.  Approve the transaction in your wallet popup.
 3.  Wait for confirmation (usually < 1 second on Solana).
 
-![Payment Execution](demo/5-get-mint.png)
+![Payment Execution](./demo/5-get-mint.png)
 *Above: The wallet approval screen showing the transfer of funds and program interaction.*
 
 ## Testing
