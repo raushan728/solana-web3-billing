@@ -183,7 +183,6 @@ pub struct MakePayment<'info> {
 
     #[account(
         init,
-        // Ab hum argument wala 'invoice_id' use kar rahe hain seed ke liye
         seeds = [
             b"invoice", 
             subscription.key().as_ref(), 

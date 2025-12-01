@@ -5,7 +5,7 @@ import { useBilling } from "../hooks/useBilling";
 import { web3, BN } from "@coral-xyz/anchor";
 import { PublicKey } from "@solana/web3.js";
 import { motion } from "framer-motion";
-import { Coins, Briefcase, PlusCircle, Rocket } from "lucide-react"; // Icons
+import { Coins, Briefcase, PlusCircle, Rocket } from "lucide-react";
 
 export default function MerchantView() {
   const { getProgram, wallet, createFakeUsdc } = useBilling();
@@ -101,7 +101,6 @@ export default function MerchantView() {
       </div>
 
       <div className="space-y-6">
-        {/* Step 1 */}
         <div className="bg-gray-800/50 p-4 rounded-xl border border-gray-700">
           <label className="text-xs text-gray-400 uppercase font-bold tracking-wider">
             Step 1: Setup Token
@@ -124,7 +123,6 @@ export default function MerchantView() {
           />
         </div>
 
-        {/* Step 2 */}
         <motion.button
           whileHover={{
             scale: 1.05,
@@ -138,7 +136,6 @@ export default function MerchantView() {
           <Rocket size={20} /> Initialize Merchant
         </motion.button>
 
-        {/* Step 3 */}
         <div className="border-t border-gray-700 pt-4">
           <p className="text-sm text-gray-400 mb-3 flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-green-500"></span>
