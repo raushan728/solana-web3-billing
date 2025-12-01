@@ -10,14 +10,40 @@
 
 ---
 
-## Quick Navigation
+## Table of Contents
 
-- [Home](#solana-web3-billing-protocol)
+- [Solana Web3 Billing Protocol](#solana-web3-billing-protocol)
+  - [Introduction](#introduction)
+  - [Key Features](#key-features)
 - [System Architecture](#system-architecture)
+  - [Account Structure & Relationships](#account-structure--relationships)
+- [Prerequisites](#prerequisites)
+  - [1. Operating System](#1-operating-system)
+  - [2. Install Rust](#2-install-rust)
+  - [3. Install Solana CLI](#3-install-solana-cli)
+  - [4. Install Node.js & Yarn](#4-install-nodejs--yarn)
+  - [5. Install Anchor Framework](#5-install-anchor-framework)
 - [Installation Guide](#installation-guide)
+  - [Step 1: Clone the Repository](#step-1-clone-the-repository)
+  - [Step 2: Project Structure Overview](#step-2-project-structure-overview)
+  - [Step 3: Install Backend Dependencies](#step-3-install-backend-dependencies)
+  - [Step 4: Install Frontend Dependencies](#step-4-install-frontend-dependencies)
 - [Configuration Guide](#configuration-guide)
-- [Visual Walkthrough](#visual-walkthrough)
+  - [1. Get Your Program ID](#1-get-your-program-id)
+  - [2. Update the Smart Contract (lib.rs)](#2-update-the-smart-contract-librs)
+  - [3. Update Anchor.toml](#3-update-anchortoml)
+  - [4. Re-build the Program](#4-re-build-the-program)
+  - [5. Update Frontend Constants](#5-update-frontend-constants)
+- [Wallet Setup (Local Development)](#wallet-setup-local-development)
+- [Visual Walkthrough & Usage](#visual-walkthrough--usage)
+  - [Phase 1: Merchant Setup](#phase-1-merchant-setup)
+  - [Phase 2: Customer View](#phase-2-customer-view)
+  - [Phase 3: Payment & Subscription](#phase-3-payment--subscription)
+- [Testing](#testing)
 - [Troubleshooting](#troubleshooting)
+- [Contributing](#contributing)
+- [Connect with Me](#connect-with-me)
+- [License](#license)
 
 # Solana Web3 Billing Protocol
 
